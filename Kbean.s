@@ -8,21 +8,21 @@
 
 	seg.u Variables
 	org $80
-;Posiçoes x e y	
+;X and Y positions
 KBxpos		byte
 KBypos		byte
 Enemyxpos	byte
 Enemyypos	byte
 Missilexpos 	byte
 Missileypos 	byte
-;Ponteiros dos bitmaps
+;Bitmap pointers
 KBbmPtr 	word	
 KBcolorPtr 	word	
 EnemybmPtr	word
 EnemycolorPtr	word
-;Usado para controlar as animaçoes
+;Used to handle animations
 KBAnimOffset 	byte
-;Para numeros aleatorios
+;For random number generation
 Random 		byte
 ;Scoreboard
 Score 		byte
@@ -134,7 +134,7 @@ vbscann:
 	dex
 	bne vbscann
 
-	;Subrotina de posiçao X
+	;X position subroutine
 	lda KBxpos
 	ldy #0
 	jsr Setobjectxpos
@@ -262,12 +262,12 @@ KBspritescan:
 	bcc DrawKB
 	lda #0
 DrawKB:
-	;controle da animaçao/sprite a ser desenhada
+	;Animation control
 	clc
 	adc KBAnimOffset
 
 	tay
-	lda (KBbmPtr),Y	;O parentese implica 16 bits, olha KBbmPtr e KBbmPtr+1
+	lda (KBbmPtr),Y	;() means 16 bits, loads KBbmPtr and KBbmPtr+1
 	sta WSYNC
 	sta GRP0
 	lda (KBcolorPtr),Y
@@ -287,7 +287,7 @@ DrawEnemy:
 	sta NUSIZ1
 
 	lda (EnemybmPtr),Y
-	sta WSYNC 		;Como tem 2 WSYNCS, vira 2-line Kernel
+	sta WSYNC 		;2 WSYNCS means 2-line Kernel
 	sta GRP1
 	lda (EnemycolorPtr),Y
 	sta COLUP1
@@ -316,7 +316,7 @@ ovscan:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; INPUT CHECK
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;Analisa os valores de SWCHA e compara caso a caso
+;reads SWCHA and checks each case bit
 ;Bit works like logical AND. Sets the same flags without
 ;modifying ACC
 
@@ -399,7 +399,7 @@ EndInputCheck:
 
 
 UpdateEnemyy:
-	;Se a posição for 0 (parte de baixo da tela), volta pra o topo(y=96)
+    ;If ypos = 0, goes back to the top (y=96)
 	lda Enemyypos
 	clc
 	cmp #0	
@@ -683,8 +683,6 @@ KBbm1:
 	.byte #%00011000;$F2
 
 KBbm2:
-	;Labels nao aparecem na memoria, logo e byte seguinte esta a 9 endereços do
-	;inicio da sprite anterior
 	.byte #0
 	.byte #%00100100;$42
 	.byte #%00100100;$42
